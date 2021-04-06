@@ -10,7 +10,12 @@ class Burger extends Component {
 			.keys(this.props.ingredients)
 			.map(ingredientKey => {
 				return [...Array(this.props.ingredients[ingredientKey])].map((_, index) => {
-					return <BurgerIngredient key={ingredientKey + index} type={ingredientKey} />;
+					return (
+						<BurgerIngredient
+							key={ingredientKey + index}
+							type={ingredientKey}
+						/>
+					);
 				});
 			})
 			.reduce((array, element) => {
@@ -18,16 +23,16 @@ class Burger extends Component {
 			}, []);
 
 		if (transformedIngredients.length === 0) {
-			transformedIngredients = <p>Please start adding ingredients</p>
+			transformedIngredients = <p>Please start adding ingredients</p>;
 		}
 
 		console.log('[Burger.js] transformedIngredients', transformedIngredients);
 
 		return (
 			<div className={classes.Burger}>
-				<BurgerIngredient type={'bread-top'} />
+				<BurgerIngredient type={'bread-top'}/>
 				{transformedIngredients}
-				<BurgerIngredient type={'bread-bottom'} />
+				<BurgerIngredient type={'bread-bottom'}/>
 			</div>
 		);
 	};
