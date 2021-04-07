@@ -7,8 +7,11 @@ import Toolbar from '../Navigation/Toolbar/Toolbar';
 import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
 
 class Layout extends Component {
+	/**
+	 * @type {{showSideDrawer: boolean}}
+	 */
 	state = {
-		showSideDrawer: true
+		showSideDrawer: false
 	};
 
 	openSideDrawer = () => {
@@ -19,13 +22,19 @@ class Layout extends Component {
 		this.setState({ showSideDrawer: false });
 	};
 
+	toggleSideDrawer = () => {
+		this.setState(prevState => {
+			return { showSideDrawer: !prevState.showSideDrawer };
+		});
+	};
+
 	/**
 	 * @returns {JSX.Element}
 	 */
 	render() {
 		return (
 			<Aux>
-				<Toolbar/>
+				<Toolbar onClickToolbarSideDrawerToggle={this.toggleSideDrawer}/>
 				<SideDrawer
 					show={this.state.showSideDrawer}
 					onClickSideDrawerBackdrop={this.closeSideDrawer}

@@ -4,6 +4,7 @@ import classes from './Toolbar.module.css';
 
 import Logo from '../../Logo/Logo';
 import NavigationItems from '../NavigationItems/NavigationItems';
+import SideDrawerToggle from '../SideDrawer/SideDrawerToggle/SideDrawerToggle';
 
 class Toolbar extends Component {
 	/**
@@ -12,9 +13,9 @@ class Toolbar extends Component {
 	render() {
 		return (
 			<header className={classes.Toolbar}>
-				<div>MENU</div>
+				<SideDrawerToggle onClick={this.props.onClickToolbarSideDrawerToggle}/>
 				<div className={classes.Logo}>
-					<Logo />
+					<Logo/>
 				</div>
 				<nav className={classes.DesktopOnly}>
 					<NavigationItems/>
