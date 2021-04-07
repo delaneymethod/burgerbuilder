@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import classes from './BuildControl.module.css';
 
 class BuildControl extends Component {
+	/**
+	 * @returns {JSX.Element}
+	 */
 	render() {
 		return (
 			<div className={classes.BuildControl}>
@@ -12,6 +15,7 @@ class BuildControl extends Component {
 				<button
 					className={classes.Less}
 					onClick={this.props.removeIngredient}
+					disabled={this.props.disabledIngredient}
 				>
 					Less
 				</button>

@@ -4,6 +4,9 @@ import * as PropTypes from 'prop-types';
 import classes from './BurgerIngredient.module.css';
 
 class BurgerIngredient extends Component {
+	/**
+	 * @returns {JSX.Element}
+	 */
 	render() {
 		let ingredient = null;
 
