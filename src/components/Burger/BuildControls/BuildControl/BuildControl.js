@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import classes from './BuildControl.module.css';
 
@@ -29,5 +30,12 @@ class BuildControl extends Component {
 		);
 	};
 }
+
+BuildControl.propTypes = {
+	label: PropTypes.string.isRequired,
+	addIngredient: PropTypes.func.isRequired,
+	removeIngredient: PropTypes.func.isRequired,
+	disabledIngredient: PropTypes.bool.isRequired
+};
 
 export default BuildControl;

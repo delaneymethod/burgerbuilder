@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import classes from './Button.module.css';
 
@@ -22,5 +23,11 @@ class Button extends Component {
 		);
 	};
 }
+
+Button.propTypes = {
+	type: PropTypes.string.isRequired,
+	onClick: PropTypes.func.isRequired,
+	children: PropTypes.string.isRequired
+};
 
 export default Button;

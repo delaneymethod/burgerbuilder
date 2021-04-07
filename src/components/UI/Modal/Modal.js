@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import classes from './Modal.module.css';
 
@@ -29,5 +30,11 @@ class Modal extends Component {
 		);
 	};
 }
+
+Modal.propTypes = {
+	show: PropTypes.bool.isRequired,
+	children: PropTypes.element.isRequired,
+	onClickModalBackdrop: PropTypes.func.isRequired
+};
 
 export default Modal;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import classes from './Toolbar.module.css';
 
@@ -24,5 +25,9 @@ class Toolbar extends Component {
 		);
 	};
 }
+
+Toolbar.propTypes = {
+	onClickToolbarSideDrawerToggle: PropTypes.func.isRequired
+};
 
 export default Toolbar;

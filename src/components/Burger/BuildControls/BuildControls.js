@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import classes from './BuildControls.module.css';
 
@@ -34,5 +35,22 @@ class BuildControls extends Component {
 		);
 	};
 }
+
+BuildControls.propTypes = {
+	purchase: PropTypes.func.isRequired,
+	purchasable: PropTypes.bool.isRequired,
+	totalPrice: PropTypes.number.isRequired,
+	addIngredient: PropTypes.func.isRequired,
+	removeIngredient: PropTypes.func.isRequired,
+	controls: PropTypes.arrayOf(PropTypes.exact({
+		type: PropTypes.string.isRequired,
+		label: PropTypes.string.isRequired
+	})).isRequired,
+	disabledIngredients: PropTypes.objectOf((props, propName, component) => {
+		if (typeof propName !== 'string' && typeof props[propName] !== 'boolean') {
+			return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+		}
+	}).isRequired
+};
 
 export default BuildControls;

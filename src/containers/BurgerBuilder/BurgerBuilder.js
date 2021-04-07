@@ -133,7 +133,7 @@ class BurgerBuilder extends Component {
 	 * @returns {unknown[]}
 	 */
 	getOrderSummary = () => {
-		const orderSummary = Object
+		return Object
 			.keys(this.state.ingredients)
 			.map(ingredientKey => {
 				return (
@@ -144,8 +144,6 @@ class BurgerBuilder extends Component {
 					</li>
 				);
 			});
-
-		return orderSummary;
 	};
 
 	/**

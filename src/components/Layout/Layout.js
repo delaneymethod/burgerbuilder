@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import classes from './Layout.module.css';
 
@@ -46,5 +47,9 @@ class Layout extends Component {
 		);
 	};
 }
+
+Layout.propTypes = {
+	children: PropTypes.element.isRequired
+};
 
 export default Layout;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import classes from './NavigationItem.module.css';
 
@@ -20,5 +21,11 @@ class NavigationItem extends Component {
 		);
 	};
 }
+
+NavigationItem.propTypes = {
+	active: PropTypes.bool,
+	href: PropTypes.string.isRequired,
+	children: PropTypes.string.isRequired
+};
 
 export default NavigationItem;

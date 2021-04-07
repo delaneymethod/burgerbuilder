@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import classes from './SideDrawerToggle.module.css';
 
@@ -12,12 +13,16 @@ class SideDrawerToggle extends Component {
 				className={classes.SideDrawerToggle}
 				onClick={this.props.onClick}
 			>
-				<div></div>
-				<div></div>
-				<div></div>
+				<div/>
+				<div/>
+				<div/>
 			</div>
 		);
 	};
 }
+
+SideDrawerToggle.propTypes = {
+	onClick: PropTypes.func.isRequired
+};
 
 export default SideDrawerToggle;

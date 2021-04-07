@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import Aux from '../../../hoc/Aux/Aux';
 import Button from '../../UI/Button/Button';
@@ -33,5 +34,20 @@ class OrderSummary extends Component {
 		);
 	};
 }
+
+OrderSummary.propTypes = {
+	totalPrice: PropTypes.number.isRequired,
+	onClickCancelButton: PropTypes.func.isRequired,
+	onClickContinueButton: PropTypes.func.isRequired,
+	orderSummary: PropTypes.arrayOf(PropTypes.shape({
+		key: PropTypes.string.isRequired,
+		type: PropTypes.elementType.isRequired,
+		props: PropTypes.objectOf((props, propName, component) => {
+			if (typeof propName !== 'string' && !Array.isArray(props[propName])) {
+				return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+			}
+		}).isRequired
+	}))
+};
 
 export default OrderSummary;
