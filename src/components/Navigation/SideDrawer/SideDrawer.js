@@ -8,6 +8,7 @@ import Aux from '../../../hoc/Aux/Aux';
 import Backdrop from '../../UI/Backdrop/Backdrop';
 import NavigationItems from '../NavigationItems/NavigationItems';
 
+// MAYBE - This could be a functional component
 class SideDrawer extends Component {
 	/**
 	 * @returns {JSX.Element}

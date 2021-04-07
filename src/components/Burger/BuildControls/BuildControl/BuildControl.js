@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 
 import classes from './BuildControl.module.css';
 
+// MAYBE - This could be a functional component
 class BuildControl extends Component {
 	/**
 	 * @returns {JSX.Element}

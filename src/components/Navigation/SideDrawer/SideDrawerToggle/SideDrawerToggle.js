@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 
 import classes from './SideDrawerToggle.module.css';
 
+// MAYBE - This could be a functional component
 class SideDrawerToggle extends Component {
 	/**
 	 * @returns {JSX.Element}

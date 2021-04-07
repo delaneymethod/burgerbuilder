@@ -5,6 +5,7 @@ import classes from './Burger.module.css';
 
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 
+// MAYBE - This could be a functional component
 class Burger extends Component {
 	/**
 	 * @returns {JSX.Element}

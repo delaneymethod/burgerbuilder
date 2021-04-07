@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 
 import classes from './Backdrop.module.css';
 
+// MAYBE - This could be a functional component
 class Backdrop extends Component {
 	/**
 	 * @returns {JSX.Element}

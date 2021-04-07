@@ -4,6 +4,7 @@ import * as PropTypes from 'prop-types';
 import Aux from '../../../hoc/Aux/Aux';
 import Button from '../../UI/Button/Button';
 
+// MAYBE - This could be a functional component
 class OrderSummary extends Component {
 	/**
 	 * @returns {JSX.Element}

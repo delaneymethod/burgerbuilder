@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 
 import classes from './Button.module.css';
 
+// MAYBE - This could be a functional component
 class Button extends Component {
 	/**
 	 * @returns {JSX.Element}

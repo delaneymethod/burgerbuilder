@@ -7,6 +7,7 @@ import Logo from '../../Logo/Logo';
 import NavigationItems from '../NavigationItems/NavigationItems';
 import SideDrawerToggle from '../SideDrawer/SideDrawerToggle/SideDrawerToggle';
 
+// MAYBE - This could be a functional component
 class Toolbar extends Component {
 	/**
 	 * @returns {JSX.Element}

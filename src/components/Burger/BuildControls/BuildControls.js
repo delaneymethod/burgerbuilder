@@ -5,6 +5,7 @@ import classes from './BuildControls.module.css';
 
 import BuildControl from './BuildControl/BuildControl';
 
+// MAYBE - This could be a functional component
 class BuildControls extends Component {
 	/**
 	 * @returns {JSX.Element}

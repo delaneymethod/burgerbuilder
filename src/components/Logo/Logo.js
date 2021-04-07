@@ -4,6 +4,7 @@ import classes from './Logo.module.css';
 
 import burgerLogo from '../../assets/images/burger-logo.png';
 
+// MAYBE - This could be a functional component
 class Logo extends Component {
 	/**
 	 * @returns {JSX.Element}

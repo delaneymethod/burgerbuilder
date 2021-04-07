@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 
 import classes from './BurgerIngredient.module.css';
 
+// MAYBE - This could be a functional component
 class BurgerIngredient extends Component {
 	/**
 	 * @returns {JSX.Element}

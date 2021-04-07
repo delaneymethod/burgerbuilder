@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 
 import classes from './NavigationItem.module.css';
 
+// MAYBE - This could be a functional component
 class NavigationItem extends Component {
 	/**
 	 * @returns {JSX.Element}
