@@ -8,6 +8,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import BurgerIngredient from '../../components/Burger/BurgerIngredient/BurgerIngredient';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 /**
  * @type {{bacon: number, salad: number, meat: number, cheese: number}}
@@ -31,7 +32,7 @@ const controls = [
 
 class BurgerBuilder extends Component {
 	/**
-	 * @type {{purchasable: boolean, totalPrice: number, ingredients: {bacon: number, salad: number, meat: number, cheese: number}}}
+	 * @type {{purchasable: boolean, totalPrice: number, purchasing: boolean, ingredients: {bacon: number, salad: number, meat: number, cheese: number}, loading: boolean}}
 	 */
 	state = {
 		ingredients: {
@@ -51,6 +52,8 @@ class BurgerBuilder extends Component {
 	purchaseCancel = () => this.setState({ purchasing: false });
 
 	purchaseContinue = () => {
+		this.setState({ loading: true });
+
 		const order = {
 			totalPrice: this.state.totalPrice,
 			ingredients: this.state.ingredients,
@@ -72,9 +75,19 @@ class BurgerBuilder extends Component {
 			.post('/orders.json', order)
 			.then(response => {
 				console.log(response);
+
+				this.setState({
+					loading: false,
+					purchasing: false
+				});
 			})
 			.catch(error => {
 				console.error(error);
+
+				this.setState({
+					loading: false,
+					purchasing: false
+				});
 			});
 	};
 
@@ -202,6 +215,9 @@ class BurgerBuilder extends Component {
 		return burgerIngredients;
 	};
 
+	/**
+	 * @returns {JSX.Element}
+	 */
 	getOrderSummary = () => {
 		const ingredientsSummary = this.getIngredientsSummary();
 
@@ -250,4 +266,4 @@ class BurgerBuilder extends Component {
 	};
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axiosOrders);

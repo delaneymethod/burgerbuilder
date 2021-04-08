@@ -5,7 +5,7 @@ import classes from './Spinner.module.css';
 class Spinner extends Component {
 	render() {
 		return (
-			<div className={classes.Loader}>Loading...</div>
+			<div className={classes.Loader}/>
 		);
 	};
 }
