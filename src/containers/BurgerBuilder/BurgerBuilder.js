@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axiosOrders from '../../axiosOrders';
 
 import Aux from '../../hoc/Aux/Aux';
 import Burger from '../../components/Burger/Burger';
@@ -6,6 +7,7 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import BurgerIngredient from '../../components/Burger/BurgerIngredient/BurgerIngredient';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 /**
  * @type {{bacon: number, salad: number, meat: number, cheese: number}}
@@ -40,14 +42,41 @@ class BurgerBuilder extends Component {
 		},
 		totalPrice: 4,
 		purchasable: false,
-		purchasing: false
+		purchasing: false,
+		loading: false
 	};
 
 	purchase = () => this.setState({ purchasing: true });
 
 	purchaseCancel = () => this.setState({ purchasing: false });
 
-	purchaseContinue = () => alert('You continue...');
+	purchaseContinue = () => {
+		const order = {
+			totalPrice: this.state.totalPrice,
+			ingredients: this.state.ingredients,
+			customer: {
+				fullName: 'Sean Delaney',
+				postalAddress: {
+					street1: 'Test Street 1',
+					street2: 'Test Street 2',
+					city: 'Test City',
+					postalCode: 'Test Postal Code',
+					country: 'United Kingdom'
+				},
+				email: 'hello@delaneymethod.com'
+			},
+			deliveryMethod: 'standard'
+		};
+
+		axiosOrders
+			.post('/orders.json', order)
+			.then(response => {
+				console.log(response);
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	};
 
 	/**
 	 * @param ingredients
@@ -132,7 +161,7 @@ class BurgerBuilder extends Component {
 	/**
 	 * @returns {unknown[]}
 	 */
-	getOrderSummary = () => {
+	getIngredientsSummary = () => {
 		return Object
 			.keys(this.state.ingredients)
 			.map(ingredientKey => {
@@ -173,13 +202,30 @@ class BurgerBuilder extends Component {
 		return burgerIngredients;
 	};
 
+	getOrderSummary = () => {
+		const ingredientsSummary = this.getIngredientsSummary();
+
+		let orderSummary = <OrderSummary
+			totalPrice={this.state.totalPrice}
+			ingredientsSummary={ingredientsSummary}
+			onClickCancelButton={this.purchaseCancel}
+			onClickContinueButton={this.purchaseContinue}
+		/>;
+
+		if (this.state.loading) {
+			orderSummary = <Spinner/>;
+		}
+
+		return orderSummary;
+	};
+
 	/**
 	 * @returns {JSX.Element}
 	 */
 	render() {
-		const disabledIngredients = this.getDisabledIngredients();
 		const orderSummary = this.getOrderSummary();
 		const burgerIngredients = this.getBurgerIngredients();
+		const disabledIngredients = this.getDisabledIngredients();
 
 		return (
 			<Aux>
@@ -187,12 +233,7 @@ class BurgerBuilder extends Component {
 					show={this.state.purchasing}
 					onClickModalBackdrop={this.purchaseCancel}
 				>
-					<OrderSummary
-						orderSummary={orderSummary}
-						totalPrice={this.state.totalPrice}
-						onClickCancelButton={this.purchaseCancel}
-						onClickContinueButton={this.purchaseContinue}
-					/>
+					{orderSummary}
 				</Modal>
 				<Burger burgerIngredients={burgerIngredients}/>
 				<BuildControls
