@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axiosOrders from '../../axiosOrders';
+import axiosInstance from '../../axiosIntance';
 
 import Aux from '../../hoc/Aux/Aux';
 import Burger from '../../components/Burger/Burger';
@@ -32,19 +32,30 @@ const controls = [
 
 class BurgerBuilder extends Component {
 	/**
-	 * @type {{purchasable: boolean, totalPrice: number, purchasing: boolean, ingredients: {bacon: number, salad: number, meat: number, cheese: number}, loading: boolean}}
+	 * @type {{purchasable: boolean, totalPrice: number, purchasing: boolean, showError: boolean, ingredients: null, loading: boolean, error: null}}
 	 */
 	state = {
-		ingredients: {
-			salad: 0,
-			bacon: 0,
-			cheese: 0,
-			meat: 0
-		},
+		error: null,
+		showError: false,
+		ingredients: null,
 		totalPrice: 4,
 		purchasable: false,
 		purchasing: false,
 		loading: false
+	};
+
+	componentDidMount = () => {
+		axiosInstance
+			.get('/ingredients.json')
+			.then(response => {
+				this.setState({ ingredients: response.data });
+			})
+			.catch(error => {
+				this.setState({
+					error,
+					showError: true
+				});
+			});
 	};
 
 	purchase = () => this.setState({ purchasing: true });
@@ -71,22 +82,20 @@ class BurgerBuilder extends Component {
 			deliveryMethod: 'standard'
 		};
 
-		axiosOrders
+		axiosInstance
 			.post('/orders.json', order)
-			.then(response => {
-				console.log(response);
-
+			.then(() => {
 				this.setState({
 					loading: false,
 					purchasing: false
 				});
 			})
 			.catch(error => {
-				console.error(error);
-
 				this.setState({
+					error,
+					showError: true,
 					loading: false,
-					purchasing: false
+					purchasing: false,
 				});
 			});
 	};
@@ -218,30 +227,41 @@ class BurgerBuilder extends Component {
 	/**
 	 * @returns {JSX.Element}
 	 */
-	getOrderSummary = () => {
-		const ingredientsSummary = this.getIngredientsSummary();
+	render() {
+		let orderSummary = <div/>;
+		let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner/>;
 
-		let orderSummary = <OrderSummary
-			totalPrice={this.state.totalPrice}
-			ingredientsSummary={ingredientsSummary}
-			onClickCancelButton={this.purchaseCancel}
-			onClickContinueButton={this.purchaseContinue}
-		/>;
+		if (this.state.ingredients) {
+			const burgerIngredients = this.getBurgerIngredients();
+			const ingredientsSummary = this.getIngredientsSummary();
+			const disabledIngredients = this.getDisabledIngredients();
+
+			orderSummary = <OrderSummary
+				totalPrice={this.state.totalPrice}
+				ingredientsSummary={ingredientsSummary}
+				onClickCancelButton={this.purchaseCancel}
+				onClickContinueButton={this.purchaseContinue}
+			/>;
+
+			burger = (
+				<Aux>
+					<Burger burgerIngredients={burgerIngredients}/>
+					<BuildControls
+						controls={controls}
+						totalPrice={this.state.totalPrice}
+						purchasable={this.state.purchasable}
+						purchase={this.purchase}
+						addIngredient={this.addIngredient}
+						removeIngredient={this.removeIngredient}
+						disabledIngredients={disabledIngredients}
+					/>
+				</Aux>
+			);
+		}
 
 		if (this.state.loading) {
 			orderSummary = <Spinner/>;
 		}
-
-		return orderSummary;
-	};
-
-	/**
-	 * @returns {JSX.Element}
-	 */
-	render() {
-		const orderSummary = this.getOrderSummary();
-		const burgerIngredients = this.getBurgerIngredients();
-		const disabledIngredients = this.getDisabledIngredients();
 
 		return (
 			<Aux>
@@ -251,19 +271,10 @@ class BurgerBuilder extends Component {
 				>
 					{orderSummary}
 				</Modal>
-				<Burger burgerIngredients={burgerIngredients}/>
-				<BuildControls
-					controls={controls}
-					totalPrice={this.state.totalPrice}
-					purchasable={this.state.purchasable}
-					purchase={this.purchase}
-					addIngredient={this.addIngredient}
-					removeIngredient={this.removeIngredient}
-					disabledIngredients={disabledIngredients}
-				/>
+				{burger}
 			</Aux>
 		);
 	};
 }
 
-export default withErrorHandler(BurgerBuilder, axiosOrders);
+export default withErrorHandler(BurgerBuilder, axiosInstance);

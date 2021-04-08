@@ -3,8 +3,18 @@ import React, { Component } from 'react';
 import Aux from '../Aux/Aux';
 import Modal from '../../components/UI/Modal/Modal';
 
-const withErrorHandler = (WrappedComponent, axios) => {
-	return class Wrapped extends Component {
+const withErrorHandler = (WrappedComponent, axiosInstance) => {
+	return class extends Component {
+		/**
+		 * @type {number}
+		 */
+		requestInterceptor = 0;
+
+		/**
+		 * @type {number}
+		 */
+		responseInterceptor = 0;
+
 		/**
 		 * @type {{showError: boolean, error: null}}
 		 */
@@ -13,8 +23,8 @@ const withErrorHandler = (WrappedComponent, axios) => {
 			showError: false
 		};
 
-		componentDidMount = () => {
-			axios.interceptors.request.use(request => {
+		componentWillMount = () => {
+			this.requestInterceptor = axiosInstance.interceptors.request.use(request => {
 				this.setState({
 					error: null,
 					showError: false
@@ -28,12 +38,17 @@ const withErrorHandler = (WrappedComponent, axios) => {
 				});
 			});
 
-			axios.interceptors.response.use(response => response, error => {
+			this.responseInterceptor = axiosInstance.interceptors.response.use(response => response, error => {
 				this.setState({
 					error,
 					showError: true
 				});
 			});
+		};
+
+		componentWillUnmount = () => {
+			axiosInstance.interceptors.request.eject(this.requestInterceptor);
+			axiosInstance.interceptors.response.eject(this.responseInterceptor);
 		};
 
 		resetError = () => this.setState({
