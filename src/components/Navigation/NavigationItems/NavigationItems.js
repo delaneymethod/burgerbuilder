@@ -13,14 +13,12 @@ class NavigationItems extends Component {
 		return (
 			<ul className={classes.NavigationItems}>
 				<NavigationItem
-					href={'/'}
 					active
+					to={'/'}
 				>
 					Burger Builder
 				</NavigationItem>
-				<NavigationItem href={'/checkout'}>
-					Checkout
-				</NavigationItem>
+				<NavigationItem to={'/orders'}>Orders</NavigationItem>
 			</ul>
 		);
 	};

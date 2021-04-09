@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
 import classes from './NavigationItem.module.css';
 
@@ -11,21 +12,21 @@ class NavigationItem extends Component {
 	render() {
 		return (
 			<li className={classes.NavigationItem}>
-				<a
-					href={this.props.href}
-					title={this.props.children}
-					className={this.props.active ? classes.active : null}
+				<NavLink
+					to={this.props.to}
+					exact={this.props.exact}
+					activeClassName={classes.active}
 				>
 					{this.props.children}
-				</a>
+				</NavLink>
 			</li>
 		);
 	};
 }
 
 NavigationItem.propTypes = {
-	active: PropTypes.bool,
-	href: PropTypes.string.isRequired,
+	to: PropTypes.string.isRequired,
+	exact: PropTypes.bool,
 	children: PropTypes.string.isRequired
 };
 
