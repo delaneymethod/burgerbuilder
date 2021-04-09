@@ -6,7 +6,6 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-import BurgerIngredient from '../../components/Burger/BurgerIngredient/BurgerIngredient';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
@@ -32,7 +31,7 @@ const controls = [
 
 class BurgerBuilder extends Component {
 	/**
-	 * @type {{purchasable: boolean, totalPrice: number, purchasing: boolean, showError: boolean, ingredients: null, loading: boolean, error: null}}
+	 * @type {{purchasable: boolean, showError: boolean, totalPrice: number, purchasing: boolean, ingredients: {}, error: null, loading: boolean}}
 	 */
 	state = {
 		error: null,
@@ -63,41 +62,22 @@ class BurgerBuilder extends Component {
 	purchaseCancel = () => this.setState({ purchasing: false });
 
 	purchaseContinue = () => {
-		this.setState({ loading: true });
+		const queryParams = [];
 
-		const order = {
-			totalPrice: this.state.totalPrice,
-			ingredients: this.state.ingredients,
-			customer: {
-				fullName: 'Sean Delaney',
-				postalAddress: {
-					street1: 'Test Street 1',
-					street2: 'Test Street 2',
-					city: 'Test City',
-					postalCode: 'Test Postal Code',
-					country: 'United Kingdom'
-				},
-				email: 'hello@delaneymethod.com'
-			},
-			deliveryMethod: 'standard'
-		};
+		queryParams.push('totalPrice=' + this.state.totalPrice);
 
-		axiosInstance
-			.post('/orders.json', order)
-			.then(() => {
-				this.setState({
-					loading: false,
-					purchasing: false
-				});
-			})
-			.catch(error => {
-				this.setState({
-					error,
-					showError: true,
-					loading: false,
-					purchasing: false,
-				});
-			});
+		for (const ingredient in this.state.ingredients) {
+			if (this.state.ingredients.hasOwnProperty(ingredient)) {
+				queryParams.push(encodeURIComponent(ingredient) + '=' + encodeURIComponent(this.state.ingredients[ingredient]));
+			}
+		}
+
+		const queryString = queryParams.join('&');
+
+		this.props.history.push({
+			pathname: '/checkout',
+			search: '?' + queryString
+		});
 	};
 
 	/**
@@ -166,9 +146,9 @@ class BurgerBuilder extends Component {
 	};
 
 	/**
-	 * @returns {{bacon: number, salad: number, meat: number, cheese: number}}
+	 * @returns {JSX.Element}
 	 */
-	getDisabledIngredients = () => {
+	render() {
 		const disabledIngredients = {
 			...this.state.ingredients
 		};
@@ -177,75 +157,13 @@ class BurgerBuilder extends Component {
 			disabledIngredients[key] = disabledIngredients[key] <= 0;
 		}
 
-		return disabledIngredients;
-	};
-
-	/**
-	 * @returns {unknown[]}
-	 */
-	getIngredientsSummary = () => {
-		return Object
-			.keys(this.state.ingredients)
-			.map(ingredientKey => {
-				return (
-					<li key={ingredientKey}>
-						<span style={{ textTransform: 'capitalize' }}>
-							{ingredientKey}
-						</span>: {this.state.ingredients[ingredientKey]}
-					</li>
-				);
-			});
-	};
-
-	/**
-	 * @returns {unknown[]}
-	 */
-	getBurgerIngredients = () => {
-		let burgerIngredients = Object
-			.keys(this.state.ingredients)
-			.map(ingredientKey => {
-				return [...Array(this.state.ingredients[ingredientKey])].map((_, index) => {
-					return (
-						<BurgerIngredient
-							key={ingredientKey + index}
-							type={ingredientKey}
-						/>
-					);
-				});
-			})
-			.reduce((array, element) => {
-				return array.concat(element);
-			}, []);
-
-		if (burgerIngredients.length === 0) {
-			burgerIngredients = <p>Please start adding ingredients</p>;
-		}
-
-		return burgerIngredients;
-	};
-
-	/**
-	 * @returns {JSX.Element}
-	 */
-	render() {
 		let orderSummary = <div/>;
 		let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner/>;
 
 		if (this.state.ingredients) {
-			const burgerIngredients = this.getBurgerIngredients();
-			const ingredientsSummary = this.getIngredientsSummary();
-			const disabledIngredients = this.getDisabledIngredients();
-
-			orderSummary = <OrderSummary
-				totalPrice={this.state.totalPrice}
-				ingredientsSummary={ingredientsSummary}
-				onClickCancelButton={this.purchaseCancel}
-				onClickContinueButton={this.purchaseContinue}
-			/>;
-
 			burger = (
 				<Aux>
-					<Burger burgerIngredients={burgerIngredients}/>
+					<Burger ingredients={this.state.ingredients}/>
 					<BuildControls
 						controls={controls}
 						totalPrice={this.state.totalPrice}
@@ -257,12 +175,20 @@ class BurgerBuilder extends Component {
 					/>
 				</Aux>
 			);
+
+			orderSummary = <OrderSummary
+				totalPrice={this.state.totalPrice}
+				ingredients={this.state.ingredients}
+				onClickCancelButton={this.purchaseCancel}
+				onClickContinueButton={this.purchaseContinue}
+			/>;
 		}
 
 		if (this.state.loading) {
 			orderSummary = <Spinner/>;
 		}
 
+		// {salad: true, meat: false, ...}
 		return (
 			<Aux>
 				<Modal

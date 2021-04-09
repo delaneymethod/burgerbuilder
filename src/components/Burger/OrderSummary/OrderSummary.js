@@ -10,14 +10,28 @@ class OrderSummary extends Component {
 	 * @returns {JSX.Element}
 	 */
 	render() {
+		const ingredientsSummary = Object
+			.keys(this.props.ingredients)
+			.map(ingredientKey => {
+				return (
+					<li key={ingredientKey}>
+						<span style={{ textTransform: 'capitalize' }}>{ingredientKey}</span>: {this.props.ingredients[ingredientKey]}
+					</li>
+				);
+			});
+
 		return (
 			<Aux>
 				<h3>Your Order</h3>
 				<p>A delicious burger with the following ingredients:</p>
 				<ul>
-					{this.props.ingredientsSummary}
+					{ingredientsSummary}
 				</ul>
-				<p><strong>Total Price: {this.props.totalPrice.toFixed(2)}</strong></p>
+				<p>
+					<strong>
+						Total Price: {this.props.totalPrice.toFixed(2)}
+					</strong>
+				</p>
 				<p>Continue to Checkout?</p>
 				<Button
 					type={'Danger'}
@@ -40,15 +54,11 @@ OrderSummary.propTypes = {
 	totalPrice: PropTypes.number.isRequired,
 	onClickCancelButton: PropTypes.func.isRequired,
 	onClickContinueButton: PropTypes.func.isRequired,
-	orderSummary: PropTypes.arrayOf(PropTypes.shape({
-		key: PropTypes.string.isRequired,
-		type: PropTypes.elementType.isRequired,
-		props: PropTypes.objectOf((props, propName, component) => {
-			if (typeof propName !== 'string' && !Array.isArray(props[propName])) {
-				return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
-			}
-		}).isRequired
-	}))
+	ingredients: PropTypes.objectOf((props, propName, component) => {
+		if (typeof propName !== 'string' && typeof props[propName] !== 'string') {
+			return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+		}
+	}).isRequired
 };
 
 export default OrderSummary;

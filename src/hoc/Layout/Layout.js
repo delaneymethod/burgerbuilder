@@ -49,7 +49,7 @@ class Layout extends Component {
 }
 
 Layout.propTypes = {
-	children: PropTypes.element.isRequired
+	children: PropTypes.any.isRequired
 };
 
 export default Layout;
