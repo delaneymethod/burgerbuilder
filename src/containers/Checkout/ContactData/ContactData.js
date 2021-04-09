@@ -5,6 +5,7 @@ import classes from './ContactData.module.css';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import axiosInstance from '../../../axiosIntance';
 import Button from '../../../components/UI/Button/Button';
+import Input from '../../../components/UI/Input/Input';
 
 class ContactData extends Component {
 	state = {
@@ -71,13 +72,13 @@ class ContactData extends Component {
 	render() {
 		let form = (
 			<form>
-				<input className={classes.Input} type={'text'} name={'fullName'} placeholder={'Your full name'}/>
-				<input className={classes.Input} type={'text'} name={'streetLine1'} placeholder={'Your street line 1'}/>
-				<input className={classes.Input} type={'text'} name={'streetLine2'} placeholder={'Your street line 2'}/>
-				<input className={classes.Input} type={'text'} name={'city'} placeholder={'Your city'}/>
-				<input className={classes.Input} type={'text'} name={'postalCode'} placeholder={'Your postal code'}/>
-				<input className={classes.Input} type={'text'} name={'country'} placeholder={'Your country'}/>
-				<input className={classes.Input} type={'email'} name={'email'} placeholder={'Your email'}/>
+				<Input label={'Full Name'} type={'text'} name={'fullName'} placeholder={'e.g. Sean Delaney'}/>
+				<Input label={'Street Line 1'} type={'text'} name={'streetLine1'} placeholder={'Enter your street line 1 here'}/>
+				<Input label={'Street Line 2'} type={'text'} name={'streetLine2'} placeholder={'Enter your street line 2 here'}/>
+				<Input label={'City'} type={'text'} name={'city'} placeholder={'e.g. Bishopton'}/>
+				<Input label={'Postal Code'} type={'text'} name={'postalCode'} placeholder={'Enter your postal code here'}/>
+				<Input label={'Country'} type={'text'} name={'country'} placeholder={'e.g. Scotland'}/>
+				<Input label={'Email'} type={'email'} name={'email'} placeholder={'e.g. hello@delaneymethod.com'}/>
 				<Button
 					type={'Success'}
 					onClick={event => this.orderNow(event)}
