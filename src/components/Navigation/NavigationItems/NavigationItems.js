@@ -13,7 +13,7 @@ class NavigationItems extends Component {
 		return (
 			<ul className={classes.NavigationItems}>
 				<NavigationItem
-					active
+					exact
 					to={'/'}
 				>
 					Burger Builder

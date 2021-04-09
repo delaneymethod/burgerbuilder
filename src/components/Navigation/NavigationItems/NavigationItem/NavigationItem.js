@@ -25,8 +25,8 @@ class NavigationItem extends Component {
 }
 
 NavigationItem.propTypes = {
-	to: PropTypes.string.isRequired,
 	exact: PropTypes.bool,
+	to: PropTypes.string.isRequired,
 	children: PropTypes.string.isRequired
 };
 
