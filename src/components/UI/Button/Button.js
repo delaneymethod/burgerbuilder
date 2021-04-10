@@ -10,7 +10,7 @@ class Button extends Component {
 	 */
 	render() {
 		return (
-			<div
+			<button
 				className={
 					[
 						classes.Button,
@@ -18,14 +18,16 @@ class Button extends Component {
 					].join(' ')
 				}
 				onClick={this.props.onClick}
+				disabled={this.props.disabled}
 			>
 				{this.props.children}
-			</div>
+			</button>
 		);
 	};
 }
 
 Button.propTypes = {
+	disabled: PropTypes.bool,
 	type: PropTypes.string.isRequired,
 	onClick: PropTypes.func.isRequired,
 	children: PropTypes.string.isRequired

@@ -9,7 +9,7 @@ class BurgerIngredient extends Component {
 	 * @returns {JSX.Element}
 	 */
 	render() {
-		let ingredient = null;
+		let ingredient;
 
 		switch (this.props.type) {
 			case 'bread-bottom':
