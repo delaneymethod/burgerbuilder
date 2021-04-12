@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import classes from './ContactData.module.css';
 
@@ -6,15 +7,14 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import axiosInstance from '../../../axiosIntance';
 import Button from '../../../components/UI/Button/Button';
 import Input from '../../../components/UI/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import { purchaseBurger } from '../../../store/actions';
 
 class ContactData extends Component {
 	/**
-	 * @type {{orderForm: {streetLine2: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, streetLine1: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, country: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, city: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, deliveryMethod: {elementConfig: {options: [{displayValue: string, value: string}, {displayValue: string, value: string}, {displayValue: string, value: string}]}, label: string, elementType: string, value: string}, postalCode: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, fullName: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, email: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}}, showError: boolean, error: null, loading: boolean}}
+	 * @type {{formIsValid: boolean, orderForm: {streetLine2: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, streetLine1: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, country: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, city: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, deliveryMethod: {touched: boolean, elementConfig: {options: [{displayValue: string, value: string}, {displayValue: string, value: string}, {displayValue: string, value: string}]}, isValid: boolean, label: string, elementType: string, value: string, validation: {errorMessage: string, required: boolean}}, postalCode: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean, maxLength: number}}, fullName: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, email: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}}}}
 	 */
 	state = {
-		error: null,
-		showError: false,
-		loading: false,
 		formIsValid: false,
 		orderForm: {
 			fullName: {
@@ -137,9 +137,9 @@ class ContactData extends Component {
 				elementType: 'select',
 				elementConfig: {
 					options: [
-						{ value: '', displayValue: ''},
-						{ value: 'standard', displayValue: 'Standard'},
-						{ value: 'express', displayValue: 'Express'}
+						{ value: '', displayValue: '' },
+						{ value: 'standard', displayValue: 'Standard' },
+						{ value: 'express', displayValue: 'Express' }
 					]
 				},
 				label: 'Delivery Method',
@@ -160,8 +160,6 @@ class ContactData extends Component {
 	orderNow = event => {
 		event.preventDefault();
 
-		this.setState({ loading: true });
-
 		const formData = {};
 
 		for (const formElementId in this.state.orderForm) {
@@ -174,22 +172,7 @@ class ContactData extends Component {
 			ingredients: this.props.ingredients
 		};
 
-		axiosInstance
-			.post('/orders.json', order)
-			.then(() => {
-				this.setState({
-					loading: false
-				});
-
-				this.props.history.push('/');
-			})
-			.catch(error => {
-				this.setState({
-					error,
-					showError: true,
-					loading: false
-				});
-			});
+		this.props.purchaseBurger(order);
 	};
 
 	/**
@@ -289,7 +272,7 @@ class ContactData extends Component {
 			</form>
 		);
 
-		if (this.state.loading) {
+		if (this.props.loading) {
 			form = <Spinner/>;
 		}
 
@@ -302,4 +285,26 @@ class ContactData extends Component {
 	};
 }
 
-export default ContactData;
+/**
+ * @param state
+ * @returns {{totalPrice: (number|number|*), ingredients: (null|{bacon: number, salad: number, meat: number, cheese: number}|*), loading: *}}
+ */
+const mapStateToProps = state => {
+	return {
+		loading: state.order.loading,
+		totalPrice: state.burgerBuilder.totalPrice,
+		ingredients: state.burgerBuilder.ingredients
+	};
+};
+
+/**
+ * @param dispatch
+ * @returns {{purchaseBurger: (function(*=): *)}}
+ */
+const mapDispatchToProps = dispatch => {
+	return {
+		purchaseBurger: orderData => dispatch(purchaseBurger(orderData))
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axiosInstance));
