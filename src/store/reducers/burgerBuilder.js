@@ -1,4 +1,4 @@
-import { updateObject } from '../utility';
+import { updateObject } from '../../shared/utility';
 import { ADD_INGREDIENT, FETCH_INGREDIENTS_FAILED, REMOVE_INGREDIENT, SET_INGREDIENTS } from '../actions/actionTypes';
 
 /**

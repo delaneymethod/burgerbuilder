@@ -1,4 +1,4 @@
-import { updateObject } from '../utility';
+import { updateObject } from '../../shared/utility';
 import {
 	AUTHENTICATE_SUCCESS,
 	AUTHENTICATE_FAIL,

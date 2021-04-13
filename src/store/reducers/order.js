@@ -1,4 +1,4 @@
-import { updateObject } from '../utility';
+import { updateObject } from '../../shared/utility';
 import {
 	FETCH_ORDERS_FAIL,
 	FETCH_ORDERS_START,
