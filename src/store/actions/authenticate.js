@@ -1,5 +1,11 @@
 import axiosInstance from '../../axiosInstance';
-import { AUTHENTICATE_SUCCESS, AUTHENTICATE_FAIL, AUTHENTICATE_START, AUTHENTICATE_END, AUTHENTICATE_REDIRECT_PATH } from './actionTypes';
+import {
+	AUTHENTICATE_END,
+	AUTHENTICATE_FAIL,
+	AUTHENTICATE_REDIRECT_PATH,
+	AUTHENTICATE_START,
+	AUTHENTICATE_SUCCESS
+} from './actionTypes';
 
 /**
  * @returns {{type}}
@@ -75,13 +81,51 @@ export const authenticate = authenticateData => {
 				.post(`https://identitytoolkit.googleapis.com/v1/accounts:${authenticateData.action}?key=AIzaSyB-bYSFz-IUd9Z_XZsTGi6ErIIodNVZUh4`, authenticateData)
 				.then(response => {
 					dispatch(authenticateSuccess(response.data));
-					dispatch(authenticateCheckExpiresIn(response.data.expiresIn));
+
+					if (response.data.hasOwnProperty('idToken') && response.data.hasOwnProperty('expiresIn')) {
+						const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
+
+						localStorage.setItem('idToken', response.data.idToken);
+						localStorage.setItem('localId', response.data.localId);
+						localStorage.setItem('expirationDate', expirationDate.toString());
+
+						dispatch(authenticateCheckExpiresIn(response.data.expiresIn));
+					}
 				})
 				.catch(error => {
 					dispatch(authenticateFail(error.response.data.error));
 				});
 		} else {
+			localStorage.removeItem('idToken');
+			localStorage.removeItem('localId');
+			localStorage.removeItem('expirationDate');
+
 			dispatch(authenticateEnd());
+		}
+	};
+};
+
+/**
+ * @returns {(function(*): void)|*}
+ */
+export const authenticateAuto = () => {
+	return dispatch => {
+		const idToken = localStorage.getItem('idToken');
+
+		if (!idToken) {
+			dispatch(authenticateEnd());
+		} else {
+			const expirationDate = new Date(localStorage.getItem('expirationDate'));
+
+			if (expirationDate <= new Date()) {
+				dispatch(authenticateEnd());
+			} else {
+				const localId = localStorage.getItem('localId');
+				const expiresIn = (expirationDate.getTime() - new Date().getTime()) / 1000;
+
+				dispatch(authenticateSuccess({ idToken, localId }));
+				dispatch(authenticateCheckExpiresIn(expiresIn));
+			}
 		}
 	};
 };
