@@ -34,7 +34,6 @@ class NavigationItems extends Component {
 	};
 }
 
-// FIXME
 NavigationItems.propTypes = {
 	authenticated: PropTypes.bool.isRequired
 };

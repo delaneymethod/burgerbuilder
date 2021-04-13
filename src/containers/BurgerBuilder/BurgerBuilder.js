@@ -10,6 +10,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import { addIngredient, fetchIngredients, purchaseInit, removeIngredient, authenticateRedirectPath } from '../../store/actions';
+import PropTypes from 'prop-types';
 
 /**
  * @type {({label: string, type: string}|{label: string, type: string}|{label: string, type: string}|{label: string, type: string})[]}
@@ -121,6 +122,22 @@ class BurgerBuilder extends Component {
 		);
 	};
 }
+
+BurgerBuilder.propTypes = {
+	error: PropTypes.bool.isRequired,
+	totalPrice: PropTypes.number.isRequired,
+	authenticated: PropTypes.bool.isRequired,
+	addIngredient: PropTypes.func.isRequired,
+	removeIngredient: PropTypes.func.isRequired,
+	fetchIngredients: PropTypes.func.isRequired,
+	purchaseInit: PropTypes.func.isRequired,
+	authenticateRedirectPath: PropTypes.func.isRequired,
+	ingredients: PropTypes.objectOf((props, propName, component) => {
+		if (typeof propName !== 'string' && typeof props[propName] !== 'string') {
+			return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+		}
+	})
+};
 
 /**
  * @param state

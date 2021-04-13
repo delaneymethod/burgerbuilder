@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import Aux from '../../hoc/Aux/Aux';
 import ContactData from './ContactData/ContactData';
@@ -40,9 +41,14 @@ class Checkout extends Component {
 	};
 }
 
-// FIXME
 Checkout.propTypes = {
-
+	purchased: PropTypes.bool.isRequired,
+	totalPrice: PropTypes.number.isRequired,
+	ingredients: PropTypes.objectOf((props, propName, component) => {
+		if (typeof propName !== 'string' && typeof props[propName] !== 'string') {
+			return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+		}
+	}).isRequired
 };
 
 /**

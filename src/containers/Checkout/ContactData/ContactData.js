@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import classes from './ContactData.module.css';
 
@@ -261,9 +262,17 @@ class ContactData extends Component {
 	};
 }
 
-// FIXME
 ContactData.propTypes = {
-
+	loading: PropTypes.bool.isRequired,
+	idToken: PropTypes.string.isRequired,
+	localId: PropTypes.string.isRequired,
+	totalPrice: PropTypes.number.isRequired,
+	purchaseBurger: PropTypes.func.isRequired,
+	ingredients: PropTypes.objectOf((props, propName, component) => {
+		if (typeof propName !== 'string' && typeof props[propName] !== 'string') {
+			return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+		}
+	}).isRequired
 };
 
 /**

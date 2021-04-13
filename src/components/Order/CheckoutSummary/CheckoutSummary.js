@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import classes from './CheckoutSummary.module.css';
 
@@ -38,9 +39,14 @@ class CheckoutSummary extends Component {
 	};
 }
 
-// FIXME
 CheckoutSummary.propTypes = {
-
+	onClickContinueButton: PropTypes.func.isRequired,
+	onClickCancelButton: PropTypes.func.isRequired,
+	ingredients: PropTypes.objectOf((props, propName, component) => {
+		if (typeof propName !== 'string' && typeof props[propName] !== 'string') {
+			return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+		}
+	}).isRequired
 };
 
 export default CheckoutSummary;

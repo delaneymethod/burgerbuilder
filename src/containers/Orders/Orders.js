@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import axiosInstance from '../../axiosInstance';
 import Order from '../../components/Order/Order/Order';
@@ -27,6 +28,8 @@ class Orders extends Component {
 							key={order.id}
 							ingredients={order.ingredients}
 							totalPrice={order.totalPrice}
+							localId={order.localId}
+							orderData={order.orderData}
 						/>
 					))}
 				</Aux>
@@ -37,9 +40,33 @@ class Orders extends Component {
 	};
 }
 
-// FIXME
 Orders.propTypes = {
-
+	orders: PropTypes
+		.arrayOf(PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			localId: PropTypes.string.isRequired,
+			totalPrice: PropTypes.number.isRequired,
+			ingredients: PropTypes.objectOf((props, propName, component) => {
+				if (typeof propName !== 'string' && typeof props[propName] !== 'number') {
+					return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+				}
+			}).isRequired,
+			orderData: PropTypes.shape({
+				fullName: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				streetLine1: PropTypes.string.isRequired,
+				streetLine2: PropTypes.string,
+				city: PropTypes.string.isRequired,
+				postalCode: PropTypes.string.isRequired,
+				country: PropTypes.string.isRequired,
+				deliveryMethod: PropTypes.string.isRequired
+			}).isRequired
+		}))
+		.isRequired,
+	loading: PropTypes.bool.isRequired,
+	idToken: PropTypes.string.isRequired,
+	localId: PropTypes.string.isRequired,
+	fetchOrders: PropTypes.func.isRequired
 };
 
 /**

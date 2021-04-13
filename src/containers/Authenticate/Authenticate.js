@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from  'react-router-dom';
+import PropTypes from 'prop-types';
 
 import classes from './Authenticate.module.css';
 
@@ -185,9 +186,14 @@ class Authenticate extends Component {
 	};
 }
 
-// FIXME
 Authenticate.propTypes = {
-
+	error: PropTypes.bool,
+	loading: PropTypes.bool.isRequired,
+	building: PropTypes.bool.isRequired,
+	authenticated: PropTypes.bool.isRequired,
+	authenticateRedirectPath:PropTypes.string.isRequired,
+	authenticate: PropTypes.func.isRequired,
+	resetAuthenticateRedirectPath: PropTypes.func.isRequired
 };
 
 /**

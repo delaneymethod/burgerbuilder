@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import classes from './Order.module.css';
 
@@ -18,10 +19,10 @@ class Order extends Component {
 			}
 		}
 
-		const ingredientsList = ingredients.map(ig => {
+		const ingredientsList = ingredients.map(ingredient => {
 			return (
 				<span
-					key={ig.name}
+					key={ingredient.name}
 					style={{
 						textTransform: 'capitalize',
 						display: 'inline-block',
@@ -30,23 +31,39 @@ class Order extends Component {
 						border: '1px solid #cccccc'
 					}}
 				>
-					{ig.name} ({ig.amount})
+					{ingredient.name} ({ingredient.amount})
 				</span>
 			);
 		});
 
 		return (
 			<div className={classes.Order}>
+				<p>Customer Full Name <strong>{this.props.orderData.fullName}</strong></p>
 				<p>Ingredients: {ingredientsList}</p>
-				<p>Total Price <strong>USD {Number.parseFloat(this.props.totalPrice).toFixed(2)}</strong></p>
+				<p>Total Price <strong>USD {this.props.totalPrice.toFixed(2)}</strong></p>
 			</div>
 		);
 	};
 }
 
-// FIXME
 Order.propTypes = {
-
+	localId: PropTypes.string.isRequired,
+	totalPrice: PropTypes.number.isRequired,
+	ingredients: PropTypes.objectOf((props, propName, component) => {
+		if (typeof propName !== 'string' && typeof props[propName] !== 'string') {
+			return new Error(`Invalid prop key/value supplied to ${component}. Validation failed.`);
+		}
+	}).isRequired,
+	orderData: PropTypes.shape({
+		fullName: PropTypes.string.isRequired,
+		email: PropTypes.string.isRequired,
+		streetLine1: PropTypes.string.isRequired,
+		streetLine2: PropTypes.string,
+		city: PropTypes.string.isRequired,
+		postalCode: PropTypes.string.isRequired,
+		country: PropTypes.string.isRequired,
+		deliveryMethod: PropTypes.string.isRequired
+	}).isRequired
 };
 
 export default Order;
