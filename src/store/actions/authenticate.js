@@ -1,5 +1,5 @@
 import axiosInstance from '../../axiosInstance';
-import { AUTHENTICATE_SUCCESS, AUTHENTICATE_FAIL, AUTHENTICATE_START, AUTHENTICATE_END } from './actionTypes';
+import { AUTHENTICATE_SUCCESS, AUTHENTICATE_FAIL, AUTHENTICATE_START, AUTHENTICATE_END, AUTHENTICATE_REDIRECT_PATH } from './actionTypes';
 
 /**
  * @returns {{type}}
@@ -47,7 +47,18 @@ export const authenticateEnd = () => {
  */
 export const authenticateCheckExpiresIn = expiresIn => {
 	return dispatch => {
-		setTimeout(() => dispatch(authenticateEnd()), expiresIn * 1000);
+		setTimeout(() => dispatch(authenticateEnd()), expiresIn * 1000); // 1 hour
+	};
+};
+
+/**
+ * @param path
+ * @returns {{path, type: string}}
+ */
+export const authenticateRedirectPath = path => {
+	return {
+		type: AUTHENTICATE_REDIRECT_PATH,
+		path
 	};
 };
 
@@ -57,16 +68,20 @@ export const authenticateCheckExpiresIn = expiresIn => {
  */
 export const authenticate = authenticateData => {
 	return dispatch => {
-		dispatch(authenticateStart());
+		if (authenticateData.action === 'signUp' || authenticateData.action === 'signInWithPassword') {
+			dispatch(authenticateStart());
 
-		axiosInstance
-			.post(`https://identitytoolkit.googleapis.com/v1/accounts:${authenticateData.action}?key=AIzaSyB-bYSFz-IUd9Z_XZsTGi6ErIIodNVZUh4`, authenticateData)
-			.then(response => {
-				dispatch(authenticateSuccess(response.data));
-				dispatch(authenticateCheckExpiresIn(response.data.expiresIn));
-			})
-			.catch(error => {
-				dispatch(authenticateFail(error.response.data.error));
-			});
+			axiosInstance
+				.post(`https://identitytoolkit.googleapis.com/v1/accounts:${authenticateData.action}?key=AIzaSyB-bYSFz-IUd9Z_XZsTGi6ErIIodNVZUh4`, authenticateData)
+				.then(response => {
+					dispatch(authenticateSuccess(response.data));
+					dispatch(authenticateCheckExpiresIn(response.data.expiresIn));
+				})
+				.catch(error => {
+					dispatch(authenticateFail(error.response.data.error));
+				});
+		} else {
+			dispatch(authenticateEnd());
+		}
 	};
 };

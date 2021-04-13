@@ -10,7 +10,7 @@ import Aux from '../../hoc/Aux/Aux';
 
 class Orders extends Component {
 	componentDidMount = () => {
-		this.props.fetchOrders();
+		this.props.fetchOrders(this.props.idToken);
 	};
 
 	/**
@@ -37,14 +37,20 @@ class Orders extends Component {
 	};
 }
 
+// FIXME
+Orders.propTypes = {
+
+};
+
 /**
  * @param state
- * @returns {{orders: ([]|*[]|*), loading: *}}
+ * @returns {{idToken: (null|*), orders: ([]|*[]|*), loading}}
  */
 const mapStateToProps = state => {
 	return {
 		orders: state.order.orders,
-		loading: state.order.loading
+		loading: state.order.loading,
+		idToken: state.authenticate.idToken
 	};
 };
 
@@ -54,7 +60,7 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
 	return {
-		fetchOrders: () => dispatch(fetchOrders())
+		fetchOrders: idToken => dispatch(fetchOrders(idToken))
 	};
 };
 

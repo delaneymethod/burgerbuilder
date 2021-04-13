@@ -173,7 +173,7 @@ class ContactData extends Component {
 			ingredients: this.props.ingredients
 		};
 
-		this.props.purchaseBurger(order);
+		this.props.purchaseBurger(order, this.props.idToken);
 	};
 
 	/**
@@ -287,6 +287,11 @@ class ContactData extends Component {
 	};
 }
 
+// FIXME
+ContactData.propTypes = {
+
+};
+
 /**
  * @param state
  * @returns {{totalPrice: (number|number|*), ingredients: (null|{bacon: number, salad: number, meat: number, cheese: number}|*), loading: *}}
@@ -294,6 +299,7 @@ class ContactData extends Component {
 const mapStateToProps = state => {
 	return {
 		loading: state.order.loading,
+		idToken: state.authenticate.idToken,
 		totalPrice: state.burgerBuilder.totalPrice,
 		ingredients: state.burgerBuilder.ingredients
 	};
@@ -305,7 +311,7 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
 	return {
-		purchaseBurger: orderData => dispatch(purchaseBurger(orderData))
+		purchaseBurger: (orderData, idToken) => dispatch(purchaseBurger(orderData, idToken))
 	};
 };
 

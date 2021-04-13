@@ -44,4 +44,9 @@ class Order extends Component {
 	};
 }
 
+// FIXME
+Order.propTypes = {
+
+};
+
 export default Order;

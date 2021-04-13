@@ -9,15 +9,15 @@ class Button extends Component {
 	 * @returns {JSX.Element}
 	 */
 	render() {
+		const classNames = [
+			classes.Button,
+			classes[this.props.className]
+		].join(' ');
+
 		return (
 			<button
 				type={this.props.type}
-				className={
-					[
-						classes.Button,
-						classes[this.props.className]
-					].join(' ')
-				}
+				className={classNames}
 				onClick={this.props.onClick}
 				disabled={this.props.disabled}
 			>

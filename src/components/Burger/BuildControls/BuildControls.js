@@ -28,11 +28,11 @@ class BuildControls extends Component {
 				})}
 				<Button
 					type={'button'}
-					className={classes.OrderButton}
+					className={'Order'}
 					disabled={!this.props.purchasable}
 					onClick={this.props.purchase}
 				>
-					Order Now
+					{this.props.authenticated ? 'Order Now' : 'Sign In to Order'}
 				</Button>
 			</div>
 		);
@@ -42,6 +42,7 @@ class BuildControls extends Component {
 BuildControls.propTypes = {
 	purchase: PropTypes.func.isRequired,
 	purchasable: PropTypes.bool.isRequired,
+	authenticated: PropTypes.bool.isRequired,
 	totalPrice: PropTypes.number.isRequired,
 	addIngredient: PropTypes.func.isRequired,
 	removeIngredient: PropTypes.func.isRequired,

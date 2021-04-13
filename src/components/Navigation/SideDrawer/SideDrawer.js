@@ -31,7 +31,7 @@ class SideDrawer extends Component {
 						<Logo/>
 					</div>
 					<nav>
-						<NavigationItems/>
+						<NavigationItems authenticated={this.props.authenticated}/>
 					</nav>
 				</div>
 			</Aux>
@@ -41,6 +41,7 @@ class SideDrawer extends Component {
 
 SideDrawer.propTypes = {
 	show: PropTypes.bool.isRequired,
+	authenticated: PropTypes.bool.isRequired,
 	onClickSideDrawerBackdrop: PropTypes.func.isRequired
 };
 

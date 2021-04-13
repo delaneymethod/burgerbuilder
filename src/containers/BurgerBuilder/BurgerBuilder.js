@@ -9,7 +9,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import { addIngredient, fetchIngredients, purchaseInit, removeIngredient } from '../../store/actions';
+import { addIngredient, fetchIngredients, purchaseInit, removeIngredient, authenticateRedirectPath } from '../../store/actions';
 
 /**
  * @type {({label: string, type: string}|{label: string, type: string}|{label: string, type: string}|{label: string, type: string})[]}
@@ -33,7 +33,14 @@ class BurgerBuilder extends Component {
 		this.props.fetchIngredients();
 	};
 
-	purchase = () => this.setState({ purchasing: true });
+	purchase = () => {
+		if (this.props.authenticated) {
+			this.setState({ purchasing: true });
+		} else {
+			this.props.authenticateRedirectPath('/checkout');
+			this.props.history.push('/authenticate');
+		}
+	};
 
 	purchaseCancel = () => this.setState({ purchasing: false });
 
@@ -67,7 +74,9 @@ class BurgerBuilder extends Component {
 		};
 
 		for (const key in disabledIngredients) {
-			disabledIngredients[key] = disabledIngredients[key] <= 0;
+			if (disabledIngredients.hasOwnProperty(key)) {
+				disabledIngredients[key] = disabledIngredients[key] <= 0;
+			}
 		}
 
 		let orderSummary = <div/>;
@@ -82,6 +91,7 @@ class BurgerBuilder extends Component {
 						totalPrice={this.props.totalPrice}
 						purchasable={this.updatePurchasable()}
 						purchase={this.purchase}
+						authenticated={this.props.authenticated}
 						addIngredient={this.props.addIngredient}
 						removeIngredient={this.props.removeIngredient}
 						disabledIngredients={disabledIngredients}
@@ -120,7 +130,8 @@ const mapStateToProps = state => {
 	return {
 		error: state.burgerBuilder.error,
 		totalPrice: state.burgerBuilder.totalPrice,
-		ingredients: state.burgerBuilder.ingredients
+		ingredients: state.burgerBuilder.ingredients,
+		authenticated: state.authenticate.idToken !== null
 	};
 };
 
@@ -133,7 +144,8 @@ const mapDispatchToProps = dispatch => {
 		addIngredient: ingredient => dispatch(addIngredient(ingredient)),
 		removeIngredient: ingredient => dispatch(removeIngredient(ingredient)),
 		fetchIngredients: () => dispatch(fetchIngredients()),
-		purchaseInit: () => dispatch(purchaseInit())
+		purchaseInit: () => dispatch(purchaseInit()),
+		authenticateRedirectPath: path => dispatch(authenticateRedirectPath(path))
 	};
 };
 

@@ -2,12 +2,13 @@ import { updateObject } from '../utility';
 import { ADD_INGREDIENT, FETCH_INGREDIENTS_FAILED, REMOVE_INGREDIENT, SET_INGREDIENTS } from '../actions/actionTypes';
 
 /**
- * @type {{totalPrice: number, ingredients: null, error: boolean}}
+ * @type {{totalPrice: number, ingredients: null, error: boolean, building: boolean}}
  */
 const initialState = {
 	error: false,
 	ingredients: null,
-	totalPrice: 4
+	totalPrice: 4,
+	building: false
 };
 
 /**
@@ -27,6 +28,7 @@ const INGREDIENT_PRICES = {
  */
 const addIngredient = (state, action) => {
 	const updatedValues = {
+		building: true,
 		ingredients: {
 			...state.ingredients,
 			[action.ingredient]: state.ingredients[action.ingredient] + 1
@@ -48,6 +50,7 @@ const removeIngredient = (state, action) => {
 	}
 
 	const updatedValues = {
+		building: true,
 		ingredients: {
 			...state.ingredients,
 			[action.ingredient]: state.ingredients[action.ingredient] - 1
@@ -65,6 +68,7 @@ const removeIngredient = (state, action) => {
  */
 const setIngredients = (state, action) => {
 	const updatedValues = {
+		building: initialState.building,
 		error: initialState.error,
 		totalPrice: initialState.totalPrice,
 		ingredients: {
@@ -84,7 +88,8 @@ const setIngredients = (state, action) => {
  */
 const fetchIngredientsFailed = state => {
 	const updatedValues = {
-		error: true
+		error: true,
+		building: initialState.building
 	};
 
 	return updateObject(state, updatedValues);

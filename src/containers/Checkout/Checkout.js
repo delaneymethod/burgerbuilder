@@ -40,6 +40,11 @@ class Checkout extends Component {
 	};
 }
 
+// FIXME
+Checkout.propTypes = {
+
+};
+
 /**
  * @param state
  * @returns {{totalPrice: (number|number|*), ingredients: (null|{bacon: number, salad: number, meat: number, cheese: number}|*)}}

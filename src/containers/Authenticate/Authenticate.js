@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from  'react-router-dom';
 
 import classes from './Authenticate.module.css';
 
-import { authenticate } from '../../store/actions';
+import { authenticate, authenticateRedirectPath } from '../../store/actions';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -46,6 +47,12 @@ class Authenticate extends Component {
 				isValid: false,
 				touched: false
 			}
+		}
+	};
+
+	componentDidMount = () => {
+		if (!this.props.building && this.props.authenticateRedirectPath !== '/') {
+			this.props.resetAuthenticateRedirectPath('/');
 		}
 	};
 
@@ -204,8 +211,15 @@ class Authenticate extends Component {
 			errorMessage = <p>{this.props.error}</p>;
 		}
 
+		let authenticateRedirect = null;
+
+		if (this.props.authenticated) {
+			authenticateRedirect = <Redirect to={this.props.authenticateRedirectPath}/>;
+		}
+
 		return (
 			<div className={classes.Authenticate}>
+				{authenticateRedirect}
 				{errorMessage}
 				{form}
 			</div>
@@ -213,24 +227,33 @@ class Authenticate extends Component {
 	};
 }
 
+// FIXME
+Authenticate.propTypes = {
+
+};
+
 /**
  * @param state
- * @returns {{error, loading: *}}
+ * @returns {{authenticated: boolean, error, loading, building: (boolean|*), authenticateRedirectPath: (string|*)}}
  */
 const mapStateToProps = state => {
 	return {
 		error: state.authenticate.error,
-		loading: state.authenticate.loading
+		loading: state.authenticate.loading,
+		building: state.burgerBuilder.building,
+		authenticated: state.authenticate.idToken !== null,
+		authenticateRedirectPath: state.authenticate.authenticateRedirectPath
 	};
 };
 
 /**
  * @param dispatch
- * @returns {{authenticate: (function(*=): *)}}
+ * @returns {{authenticate: (function(*=): *), resetAuthenticateRedirectPath: (function(*=): *)}}
  */
 const mapDispatchToProps = dispatch => {
 	return {
-		authenticate: authenticateData => dispatch(authenticate(authenticateData))
+		authenticate: authenticateData => dispatch(authenticate(authenticateData)),
+		resetAuthenticateRedirectPath: path => dispatch(authenticateRedirectPath(path))
 	};
 };
 

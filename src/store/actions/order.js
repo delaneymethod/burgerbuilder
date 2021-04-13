@@ -44,14 +44,15 @@ export const purchaseBurgerStart = () => {
 
 /**
  * @param orderData
+ * @param idToken
  * @returns {(function(*): void)|*}
  */
-export const purchaseBurger = orderData => {
+export const purchaseBurger = (orderData, idToken) => {
 	return dispatch => {
 		dispatch(purchaseBurgerStart());
 
 		axiosInstance
-			.post('/orders.json', orderData)
+			.post('/orders.json?auth=' + idToken, orderData)
 			.then(response => {
 				dispatch(purchaseBurgerSuccess(response.data.name, orderData));
 			})
@@ -102,14 +103,15 @@ export const fetchOrdersStart = () => {
 };
 
 /**
+ * @param idToken
  * @returns {(function(*): void)|*}
  */
-export const fetchOrders = () => {
+export const fetchOrders = idToken => {
 	return dispatch => {
 		dispatch(fetchOrdersStart());
 
 		axiosInstance
-			.get('/orders.json')
+			.get('/orders.json?auth=' + idToken)
 			.then(response => {
 				const orders = [];
 

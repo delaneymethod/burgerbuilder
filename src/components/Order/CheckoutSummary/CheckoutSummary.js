@@ -38,4 +38,9 @@ class CheckoutSummary extends Component {
 	};
 }
 
+// FIXME
+CheckoutSummary.propTypes = {
+
+};
+
 export default CheckoutSummary;

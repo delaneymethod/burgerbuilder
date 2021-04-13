@@ -20,7 +20,7 @@ class Toolbar extends Component {
 					<Logo/>
 				</div>
 				<nav className={classes.DesktopOnly}>
-					<NavigationItems/>
+					<NavigationItems authenticated={this.props.authenticated}/>
 				</nav>
 			</header>
 		);
@@ -28,6 +28,7 @@ class Toolbar extends Component {
 }
 
 Toolbar.propTypes = {
+	authenticated: PropTypes.bool.isRequired,
 	onClickToolbarSideDrawerToggle: PropTypes.func.isRequired
 };
 

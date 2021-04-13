@@ -1,5 +1,11 @@
 import { updateObject } from '../utility';
-import { AUTHENTICATE_SUCCESS, AUTHENTICATE_FAIL, AUTHENTICATE_START, AUTHENTICATE_END } from '../actions/actionTypes';
+import {
+	AUTHENTICATE_SUCCESS,
+	AUTHENTICATE_FAIL,
+	AUTHENTICATE_START,
+	AUTHENTICATE_END,
+	AUTHENTICATE_REDIRECT_PATH
+} from '../actions/actionTypes';
 
 /**
  * @type {{idToken: null, error: null, loading: boolean, localId: null}}
@@ -8,7 +14,8 @@ const initialState = {
 	idToken: null,
 	localId: null,
 	error: null,
-	loading: false
+	loading: false,
+	authenticateRedirectPath: '/'
 };
 
 /**
@@ -100,6 +107,19 @@ const authenticateEnd = state => {
 /**
  * @param state
  * @param action
+ * @returns {*}
+ */
+const authenticateRedirectPath = (state, action) => {
+	const updatedValues = {
+		authenticateRedirectPath: action.path
+	};
+
+	return updateObject(state, updatedValues);
+};
+
+/**
+ * @param state
+ * @param action
  * @returns {{idToken: null, error: null, loading: boolean, localId: null}|*}
  */
 const authenticate = (state = initialState, action) => {
@@ -112,6 +132,8 @@ const authenticate = (state = initialState, action) => {
 			return authenticateFailed(state, action);
 		case AUTHENTICATE_END:
 			return authenticateEnd(state, action);
+		case AUTHENTICATE_REDIRECT_PATH:
+			return authenticateRedirectPath(state, action);
 		default:
 			return state;
 	}
