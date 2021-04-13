@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 
 import classes from './BuildControls.module.css';
 
+import Button from '../../UI/Button/Button';
 import BuildControl from './BuildControl/BuildControl';
 
 // MAYBE - This could be a functional component
@@ -25,13 +26,14 @@ class BuildControls extends Component {
 						/>
 					);
 				})}
-				<button
+				<Button
+					type={'button'}
 					className={classes.OrderButton}
 					disabled={!this.props.purchasable}
 					onClick={this.props.purchase}
 				>
 					Order Now
-				</button>
+				</Button>
 			</div>
 		);
 	};

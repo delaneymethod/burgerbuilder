@@ -19,6 +19,7 @@ class NavigationItems extends Component {
 					Burger Builder
 				</NavigationItem>
 				<NavigationItem to={'/orders'}>Orders</NavigationItem>
+				<NavigationItem to={'/authenticate'}>Authenticate</NavigationItem>
 			</ul>
 		);
 	};

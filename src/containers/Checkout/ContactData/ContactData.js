@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import classes from './ContactData.module.css';
 
 import Spinner from '../../../components/UI/Spinner/Spinner';
-import axiosInstance from '../../../axiosIntance';
+import axiosInstance from '../../../axiosInstance';
 import Button from '../../../components/UI/Button/Button';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
@@ -16,6 +16,7 @@ class ContactData extends Component {
 	 */
 	state = {
 		formIsValid: false,
+		// TODO - Rename to form
 		orderForm: {
 			fullName: {
 				elementType: 'input',
@@ -263,7 +264,8 @@ class ContactData extends Component {
 					/>
 				))}
 				<Button
-					type={'Success'}
+					type={'submit'}
+					className={'Success'}
 					disabled={!this.state.formIsValid}
 					onClick={event => this.orderNow(event)}
 				>

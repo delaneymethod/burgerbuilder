@@ -1,4 +1,4 @@
-import axiosInstance from '../../axiosIntance';
+import axiosInstance from '../../axiosInstance';
 import { ADD_INGREDIENT, FETCH_INGREDIENTS_FAILED, REMOVE_INGREDIENT, SET_INGREDIENTS } from './actionTypes';
 
 /**

@@ -34,13 +34,15 @@ class OrderSummary extends Component {
 				</p>
 				<p>Continue to Checkout?</p>
 				<Button
-					type={'Danger'}
+					type={'button'}
+					className={'Danger'}
 					onClick={this.props.onClickCancelButton}
 				>
 					Cancel
 				</Button>
 				<Button
-					type={'Success'}
+					type={'button'}
+					className={'Success'}
 					onClick={this.props.onClickContinueButton}
 				>
 					Continue

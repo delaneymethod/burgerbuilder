@@ -20,13 +20,15 @@ class CheckoutSummary extends Component {
 					<Burger ingredients={this.props.ingredients}/>
 				</div>
 				<Button
-					type={'Danger'}
+					type={'button'}
+					className={'Danger'}
 					onClick={this.props.onClickCancelButton}
 				>
 					Cancel
 				</Button>
 				<Button
-					type={'Success'}
+					type={'button'}
+					className={'Success'}
 					onClick={this.props.onClickContinueButton}
 				>
 					Continue

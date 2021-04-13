@@ -10,6 +10,7 @@ import './index.css';
 import App from './App';
 import burgerBuilder from './store/reducers/burgerBuilder';
 import order from './store/reducers/order';
+import authenticate from './store/reducers/authenticate';
 
 /*
 const logger = store => {
@@ -29,7 +30,8 @@ const logger = store => {
 
 const reducers = combineReducers({
 	order,
-	burgerBuilder
+	burgerBuilder,
+	authenticate
 });
 
 const composeEnhancers = window.hasOwnProperty('__REDUX_DEVTOOLS_EXTENSION_COMPOSE__')

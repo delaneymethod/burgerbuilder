@@ -3,6 +3,8 @@ import * as PropTypes from 'prop-types';
 
 import classes from './BuildControl.module.css';
 
+import Button from '../../../UI/Button/Button';
+
 // MAYBE - This could be a functional component
 class BuildControl extends Component {
 	/**
@@ -14,19 +16,21 @@ class BuildControl extends Component {
 				<div className={classes.Label}>
 					{this.props.label}
 				</div>
-				<button
+				<Button
+					type={'button'}
 					className={classes.Less}
 					onClick={this.props.removeIngredient}
 					disabled={this.props.disabledIngredient}
 				>
 					Less
-				</button>
-				<button
+				</Button>
+				<Button
+					type={'button'}
 					className={classes.More}
 					onClick={this.props.addIngredient}
 				>
 					More
-				</button>
+				</Button>
 			</div>
 		);
 	};

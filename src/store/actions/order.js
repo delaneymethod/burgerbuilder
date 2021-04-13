@@ -1,4 +1,4 @@
-import axiosInstance from '../../axiosIntance';
+import axiosInstance from '../../axiosInstance';
 import {
 	FETCH_ORDERS_FAIL,
 	FETCH_ORDERS_START,
