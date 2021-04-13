@@ -4,7 +4,7 @@ import { ADD_INGREDIENT, FETCH_INGREDIENTS_FAILED, REMOVE_INGREDIENT, SET_INGRED
 /**
  * @type {{totalPrice: number, ingredients: null, error: boolean, building: boolean}}
  */
-const initialState = {
+export const initialState = {
 	error: false,
 	ingredients: null,
 	totalPrice: 4,
@@ -14,7 +14,7 @@ const initialState = {
 /**
  * @type {{bacon: number, salad: number, meat: number, cheese: number}}
  */
-const INGREDIENT_PRICES = {
+export const INGREDIENT_PRICES = {
 	salad: 0.5,
 	bacon: 0.7,
 	cheese: 0.4,

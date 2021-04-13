@@ -10,7 +10,7 @@ import {
 /**
  * @type {{idToken: null, error: null, loading: boolean, localId: null}}
  */
-const initialState = {
+export const initialState = {
 	idToken: null,
 	localId: null,
 	error: null,

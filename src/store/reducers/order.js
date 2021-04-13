@@ -12,7 +12,7 @@ import {
 /**
  * @type {{purchased: boolean, orders: *[], error: boolean, loading: boolean}}
  */
-const initialState = {
+export const initialState = {
 	orders: [],
 	error: false,
 	loading: false,

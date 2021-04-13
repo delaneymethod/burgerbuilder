@@ -22,7 +22,7 @@ const controls = [
 	{ label: 'Meat', type: 'meat' }
 ];
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
 	/**
 	 * @type {{purchasing: boolean}}
 	 */
