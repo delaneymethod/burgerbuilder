@@ -8,9 +8,13 @@ import ContactData from './ContactData/ContactData';
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 
 class Checkout extends Component {
-	checkoutContinue = () => this.props.history.replace('/checkout/contact-data');
+	checkoutContinue = () => {
+		this.props.history.replace('/checkout/contact-data');
+	};
 
-	checkoutCancel = () => this.props.history.goBack();
+	checkoutCancel = () => {
+		this.props.history.goBack();
+	};
 
 	/**
 	 * @returns {JSX.Element}

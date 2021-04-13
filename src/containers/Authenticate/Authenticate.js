@@ -9,13 +9,16 @@ import { authenticate, authenticateRedirectPath } from '../../store/actions';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import { updateObject, checkValidity } from '../../shared/utility';
+import { updateForm } from '../../shared/utility';
 
 class Authenticate extends Component {
+	/**
+	 * @type {{formIsValid: boolean, isSignUp: boolean, form: {password: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, email: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, isEmail: boolean, errorMessage: string, required: boolean}}}}}
+	 */
 	state = {
+		formIsValid: false,
 		isSignUp: true,
-		// TODO - Rename to form
-		authenticateForm: {
+		form: {
 			email: {
 				elementType: 'input',
 				elementConfig: {
@@ -66,8 +69,8 @@ class Authenticate extends Component {
 
 		const formData = {};
 
-		for (const formElementId in this.state.authenticateForm) {
-			formData[formElementId] = this.state.authenticateForm[formElementId].value;
+		for (const formElementId in this.state.form) {
+			formData[formElementId] = this.state.form[formElementId].value;
 		}
 
 		formData.returnSecureToken = true;
@@ -88,30 +91,10 @@ class Authenticate extends Component {
 	 * @param event
 	 * @param inputId
 	 */
-	changed = (event, inputId) => {
-		const updatedFormElement = updateObject(this.state.authenticateForm[inputId], {
-			isValid: checkValidity(event.target.value, this.state.authenticateForm[inputId].validation),
-			value: event.target.value,
-			touched: true
-		});
+	updateField = (event, inputId) => {
+		const { updatedForm: form, formIsValid } = updateForm(event, this.state.form, inputId);
 
-		const updatedAuthenticateForm = updateObject(this.state.authenticateForm, {
-			[inputId]: updatedFormElement
-		});
-
-		let formIsValid = true;
-
-		for (const input in updatedAuthenticateForm) {
-			if (updatedAuthenticateForm.hasOwnProperty(input)) {
-				if (!updatedAuthenticateForm[input].validation || !updatedAuthenticateForm[input].validation.required) {
-					continue;
-				}
-
-				formIsValid = updatedAuthenticateForm[input].isValid && formIsValid;
-			}
-		}
-
-		this.setState({ authenticateForm: updatedAuthenticateForm, formIsValid });
+		this.setState({ form, formIsValid });
 	};
 
 	/**
@@ -120,10 +103,10 @@ class Authenticate extends Component {
 	render() {
 		const formElements = [];
 
-		for (const key in this.state.authenticateForm) {
+		for (const key in this.state.form) {
 			formElements.push({
 				id: key,
-				config: this.state.authenticateForm[key]
+				config: this.state.form[key]
 			});
 		}
 
@@ -137,7 +120,7 @@ class Authenticate extends Component {
 						value={formElement.config.value}
 						label={formElement.config.label}
 						isValid={formElement.config.isValid}
-						onChange={event => this.changed(event, formElement.id)}
+						onChange={event => this.updateField(event, formElement.id)}
 						shouldValidate={formElement.config.validation}
 						touched={formElement.config.touched}
 					/>

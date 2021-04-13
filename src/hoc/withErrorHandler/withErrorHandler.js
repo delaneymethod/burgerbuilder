@@ -51,10 +51,12 @@ const withErrorHandler = (WrappedComponent, axiosInstance) => {
 			axiosInstance.interceptors.response.eject(this.responseInterceptor);
 		};
 
-		resetError = () => this.setState({
-			error: false,
-			showError: false
-		});
+		resetError = () => {
+			this.setState({
+				error: false,
+				showError: false
+			});
+		};
 
 		/**
 		 * @returns {JSX.Element}

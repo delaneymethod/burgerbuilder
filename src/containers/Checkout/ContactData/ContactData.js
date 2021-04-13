@@ -10,16 +10,15 @@ import Button from '../../../components/UI/Button/Button';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import { purchaseBurger } from '../../../store/actions';
-import { updateObject, checkValidity } from '../../../shared/utility';
+import { updateForm } from '../../../shared/utility';
 
 class ContactData extends Component {
 	/**
-	 * @type {{formIsValid: boolean, orderForm: {streetLine2: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, streetLine1: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, country: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, city: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, deliveryMethod: {touched: boolean, elementConfig: {options: [{displayValue: string, value: string}, {displayValue: string, value: string}, {displayValue: string, value: string}]}, isValid: boolean, label: string, elementType: string, value: string, validation: {errorMessage: string, required: boolean}}, postalCode: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean, maxLength: number}}, fullName: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, email: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}}}}
+	 * @type {{formIsValid: boolean, form: {streetLine2: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, streetLine1: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, country: {elementConfig: {placeholder: string, type: string}, label: string, elementType: string, value: string}, city: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, deliveryMethod: {touched: boolean, elementConfig: {options: [{displayValue: string, value: string}, {displayValue: string, value: string}, {displayValue: string, value: string}]}, isValid: boolean, label: string, elementType: string, value: string, validation: {errorMessage: string, required: boolean}}, postalCode: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean, maxLength: number}}, fullName: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, errorMessage: string, required: boolean}}, email: {touched: boolean, elementConfig: {placeholder: string, type: string}, isValid: boolean, label: string, elementType: string, value: string, validation: {minLength: number, isEmail: boolean, errorMessage: string, required: boolean}}}}}
 	 */
 	state = {
 		formIsValid: false,
-		// TODO - Rename to form
-		orderForm: {
+		form: {
 			fullName: {
 				elementType: 'input',
 				elementConfig: {
@@ -166,8 +165,8 @@ class ContactData extends Component {
 
 		const formData = {};
 
-		for (const formElementId in this.state.orderForm) {
-			formData[formElementId] = this.state.orderForm[formElementId].value;
+		for (const formElementId in this.state.form) {
+			formData[formElementId] = this.state.form[formElementId].value;
 		}
 
 		const order = {
@@ -184,30 +183,10 @@ class ContactData extends Component {
 	 * @param event
 	 * @param inputId
 	 */
-	changed = (event, inputId) => {
-		const updatedFormElement = updateObject(this.state.orderForm[inputId], {
-			isValid: checkValidity(event.target.value, this.state.orderForm[inputId].validation),
-			value: event.target.value,
-			touched: true
-		});
+	updateField = (event, inputId) => {
+		const { updatedForm: form, formIsValid } = updateForm(event, this.state.form, inputId);
 
-		const updatedOrderForm = updateObject(this.state.orderForm, {
-			[inputId]: updatedFormElement
-		});
-
-		let formIsValid = true;
-
-		for (const input in updatedOrderForm) {
-			if (updatedOrderForm.hasOwnProperty(input)) {
-				if (!updatedOrderForm[input].validation || !updatedOrderForm[input].validation.required) {
-					continue;
-				}
-
-				formIsValid = updatedOrderForm[input].isValid && formIsValid;
-			}
-		}
-
-		this.setState({ orderForm: updatedOrderForm, formIsValid });
+		this.setState({ form, formIsValid });
 	};
 
 	/**
@@ -216,10 +195,10 @@ class ContactData extends Component {
 	render() {
 		const formElements = [];
 
-		for (const key in this.state.orderForm) {
+		for (const key in this.state.form) {
 			formElements.push({
 				id: key,
-				config: this.state.orderForm[key]
+				config: this.state.form[key]
 			});
 		}
 
@@ -233,7 +212,7 @@ class ContactData extends Component {
 						value={formElement.config.value}
 						label={formElement.config.label}
 						isValid={formElement.config.isValid}
-						onChange={event => this.changed(event, formElement.id)}
+						onChange={event => this.updateField(event, formElement.id)}
 						shouldValidate={formElement.config.validation}
 						touched={formElement.config.touched}
 					/>

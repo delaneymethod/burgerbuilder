@@ -50,3 +50,38 @@ export const checkValidity = (value, rules) => {
 
 	return isValid;
 };
+
+/**
+ * @param event
+ * @param form
+ * @param inputId
+ * @returns {{formIsValid: boolean, updatedForm: *}}
+ */
+export const updateForm = (event, form, inputId) => {
+	const updatedFormElement = updateObject(form[inputId], {
+		isValid: checkValidity(event.target.value, form[inputId].validation),
+		value: event.target.value,
+		touched: true
+	});
+
+	const updatedForm = updateObject(form, {
+		[inputId]: updatedFormElement
+	});
+
+	let formIsValid = true;
+
+	for (const input in updatedForm) {
+		if (updatedForm.hasOwnProperty(input)) {
+			if (!updatedForm[input].validation || !updatedForm[input].validation.required) {
+				continue;
+			}
+
+			formIsValid = updatedForm[input].isValid && formIsValid;
+		}
+	}
+
+	return {
+		updatedForm,
+		formIsValid
+	};
+};
