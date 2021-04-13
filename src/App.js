@@ -5,10 +5,8 @@ import { connect } from 'react-redux';
 import { authenticateAuto } from './store/actions';
 import Layout from './hoc/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import Checkout from './containers/Checkout/Checkout';
-import Orders from './containers/Orders/Orders';
-import Authenticate from './containers/Authenticate/Authenticate';
 import Logout from './containers/Authenticate/Logout/Logout';
+import asyncComponent from './hoc/asyncComponent/asyncComponent';
 
 class App extends Component {
 	componentWillMount = () => {
@@ -19,9 +17,21 @@ class App extends Component {
 	 * @returns {JSX.Element}
 	 */
 	render() {
+		const AsyncCheckout = asyncComponent(() => {
+			return import('./containers/Checkout/Checkout');
+		});
+
+		const AsyncOrders = asyncComponent(() => {
+			return import('./containers/Orders/Orders');
+		});
+
+		const AsyncAuthenticate = asyncComponent(() => {
+			return import('./containers/Authenticate/Authenticate');
+		});
+
 		let routes = (
 			<Switch>
-				<Route path={'/authenticate'} component={Authenticate}/>
+				<Route path={'/authenticate'} component={AsyncAuthenticate}/>
 				<Route path={'/'} exact component={BurgerBuilder}/>
 				<Redirect to={'/'}/>
 			</Switch>
@@ -30,9 +40,9 @@ class App extends Component {
 		if (this.props.authenticated) {
 			routes = (
 				<Switch>
-					<Route path={'/authenticate'} component={Authenticate}/>
-					<Route path={'/checkout'} component={Checkout}/>
-					<Route path={'/orders'} component={Orders}/>
+					<Route path={'/authenticate'} component={AsyncAuthenticate}/>
+					<Route path={'/checkout'} component={AsyncCheckout}/>
+					<Route path={'/orders'} component={AsyncOrders}/>
 					<Route path={'/logout'} component={Logout}/>
 					<Route path={'/'} exact component={BurgerBuilder}/>
 					<Redirect to={'/'}/>
