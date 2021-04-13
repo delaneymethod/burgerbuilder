@@ -34,7 +34,7 @@ const reducers = combineReducers({
 	authenticate
 });
 
-const composeEnhancers = window.hasOwnProperty('__REDUX_DEVTOOLS_EXTENSION_COMPOSE__')
+const composeEnhancers = (process.env.NODE_ENV === 'development' && window.hasOwnProperty('__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'))
 	? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 	: compose;
 

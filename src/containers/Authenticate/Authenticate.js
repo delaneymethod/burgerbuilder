@@ -8,6 +8,7 @@ import { authenticate, authenticateRedirectPath } from '../../store/actions';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import { updateObject, checkValidity } from '../../shared/utility';
 
 class Authenticate extends Component {
 	state = {
@@ -83,73 +84,30 @@ class Authenticate extends Component {
 	};
 
 	/**
-	 * @param value
-	 * @param rules
-	 * @returns {boolean}
-	 */
-	checkValidity = (value, rules) => {
-		let isValid = true;
-
-		if (!rules || !rules.required) {
-			return isValid;
-		}
-
-		if (rules.required) {
-			isValid = value.trim() !== '' && isValid;
-		}
-
-		if (rules.minLength) {
-			isValid = value.length >= rules.minLength && isValid;
-		}
-
-		if (rules.maxLength) {
-			isValid = value.length <= rules.maxLength && isValid;
-		}
-
-		if (rules.isEmail) {
-			const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-
-			isValid = pattern.test(value) && isValid;
-		}
-
-		/*
-		if (rules.isNumeric) {
-			const pattern = /^\d+$/;
-
-			isValid = pattern.test(value) && isValid;
-		}
-		*/
-
-		return isValid;
-	};
-
-	/**
 	 * @param event
 	 * @param inputId
 	 */
 	changed = (event, inputId) => {
-		const updatedAuthenticateForm = {
-			...this.state.authenticateForm
-		};
+		const updatedFormElement = updateObject(this.state.authenticateForm[inputId], {
+			isValid: checkValidity(event.target.value, this.state.authenticateForm[inputId].validation),
+			value: event.target.value,
+			touched: true
+		});
 
-		const updatedFormElement = {
-			...updatedAuthenticateForm[inputId]
-		};
-
-		updatedFormElement.value = event.target.value;
-		updatedFormElement.isValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-		updatedFormElement.touched = true;
-
-		updatedAuthenticateForm[inputId] = updatedFormElement;
+		const updatedAuthenticateForm = updateObject(this.state.authenticateForm, {
+			[inputId]: updatedFormElement
+		});
 
 		let formIsValid = true;
 
 		for (const input in updatedAuthenticateForm) {
-			if (!updatedAuthenticateForm[input].validation || !updatedAuthenticateForm[input].validation.required) {
-				continue;
-			}
+			if (updatedAuthenticateForm.hasOwnProperty(input)) {
+				if (!updatedAuthenticateForm[input].validation || !updatedAuthenticateForm[input].validation.required) {
+					continue;
+				}
 
-			formIsValid = updatedAuthenticateForm[input].isValid && formIsValid;
+				formIsValid = updatedAuthenticateForm[input].isValid && formIsValid;
+			}
 		}
 
 		this.setState({ authenticateForm: updatedAuthenticateForm, formIsValid });

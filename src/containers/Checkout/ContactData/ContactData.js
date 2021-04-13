@@ -9,6 +9,7 @@ import Button from '../../../components/UI/Button/Button';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import { purchaseBurger } from '../../../store/actions';
+import { updateObject, checkValidity } from '../../../shared/utility';
 
 class ContactData extends Component {
 	/**
@@ -45,6 +46,7 @@ class ContactData extends Component {
 				validation: {
 					required: true,
 					minLength: 3,
+					isEmail: true,
 					errorMessage: 'Please enter a valid email'
 				},
 				isValid: false,
@@ -178,59 +180,30 @@ class ContactData extends Component {
 	};
 
 	/**
-	 * @param value
-	 * @param rules
-	 * @returns {boolean}
-	 */
-	checkValidity = (value, rules) => {
-		let isValid = true;
-
-		if (!rules || !rules.required) {
-			return isValid;
-		}
-
-		if (rules.required) {
-			isValid = value.trim() !== '' && isValid;
-		}
-
-		if (rules.minLength) {
-			isValid = value.length >= rules.minLength && isValid;
-		}
-
-		if (rules.maxLength) {
-			isValid = value.length <= rules.maxLength && isValid;
-		}
-
-		return isValid;
-	};
-
-	/**
 	 * @param event
 	 * @param inputId
 	 */
 	changed = (event, inputId) => {
-		const updatedOrderForm = {
-			...this.state.orderForm
-		};
+		const updatedFormElement = updateObject(this.state.orderForm[inputId], {
+			isValid: checkValidity(event.target.value, this.state.orderForm[inputId].validation),
+			value: event.target.value,
+			touched: true
+		});
 
-		const updatedFormElement = {
-			...updatedOrderForm[inputId]
-		};
-
-		updatedFormElement.value = event.target.value;
-		updatedFormElement.isValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-		updatedFormElement.touched = true;
-
-		updatedOrderForm[inputId] = updatedFormElement;
+		const updatedOrderForm = updateObject(this.state.orderForm, {
+			[inputId]: updatedFormElement
+		});
 
 		let formIsValid = true;
 
 		for (const input in updatedOrderForm) {
-			if (!updatedOrderForm[input].validation || !updatedOrderForm[input].validation.required) {
-				continue;
-			}
+			if (updatedOrderForm.hasOwnProperty(input)) {
+				if (!updatedOrderForm[input].validation || !updatedOrderForm[input].validation.required) {
+					continue;
+				}
 
-			formIsValid = updatedOrderForm[input].isValid && formIsValid;
+				formIsValid = updatedOrderForm[input].isValid && formIsValid;
+			}
 		}
 
 		this.setState({ orderForm: updatedOrderForm, formIsValid });
