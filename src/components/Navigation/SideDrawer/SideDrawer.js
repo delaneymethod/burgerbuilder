@@ -26,7 +26,10 @@ class SideDrawer extends Component {
 					show={this.props.show}
 					onClick={this.props.onClickSideDrawerBackdrop}
 				/>
-				<div className={attachedClasses.join(' ')}>
+				<div
+					className={attachedClasses.join(' ')}
+					onClick={this.props.onClickSideDrawerBackdrop}
+				>
 					<div className={classes.Logo}>
 						<Logo/>
 					</div>
